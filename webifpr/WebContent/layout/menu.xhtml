@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+	<h:form>
+	
+	<div id="menu">
+		<p:menubar>
+		
+			<p:submenu label="Administrar" icon="administrar16">
+			
+            	<p:menuitem id="colaboradoresMn" 
+				value="Colaboradores" 
+				icon="colaboradores16" 
+				action="colaborador"/>
+				
+				<p:menuitem id="coordenadoresMn" 
+				value="Coordenadores" 
+				icon="coordenadores16" 
+				action="coordenador"/>
+				
+				<p:menuitem id="professoresMn" 
+				value="Professores" 
+				icon="professores16" 
+				action="professor"/>
+				
+				<p:menuitem id="materiasMn" 
+				value="Matérias" 
+				icon="materias16" 
+				action="materia"/>
+				
+				<p:menuitem id="cursosMn" 
+				value="Cursos" 
+				icon="cursos16" 
+				action="curso"/>
+				
+				<p:menuitem id="turmasMn" 
+				value="Turmas" 
+				icon="turmas16" 
+				action="turma"/>
+				
+				<p:menuitem id="salasMn" 
+				value="Salas" 
+				icon="salas16" 
+				action="sala"/>
+				
+        	</p:submenu>
+			
+			<p:menuitem id="formaturasMn" 
+			value="Formaturas" 
+			icon="formaturas16" 
+			action="home"/>
+			
+			
+			<p:menuitem id="horariosMn" 
+			value="Horários" 
+			icon="horarios16" 
+			action="horario"/>
+			
+			<p:menuitem id="achadosEPerdidosMn" 
+			value="Achados e Perdidos" 
+			icon="objetosperdidos16" 
+			action="objeto"/>
+				
+		</p:menubar>
+	</div>
+	
+	
+	</h:form>
+</ui:composition>

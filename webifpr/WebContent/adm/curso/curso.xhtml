@@ -1,0 +1,180 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/layout/template.xhtml">
+
+	<ui:define name="body">
+	
+		<p:growl id="msg" 
+			showDetail="true" 
+			showSummary="false"/>
+		
+		<div class="gerenciar">
+		
+			<p>GERENCIAR CURSOS</p>
+			
+			<div id = "adicionarBtn">
+			
+				<h:form style="float:left;">
+				
+					<p:commandButton id="adicionarBtn"
+						value="adicionar"
+						icon="add16"
+						actionListener="#{cursoMB.criar}"
+						oncomplete="PF('dadosWidgetVar').show()"
+						update=":dadosDlg">
+						
+					</p:commandButton>
+					
+				</h:form>
+				
+			</div>
+			
+			<h:form id = "tableForm">
+			
+				<p:dataTable id = "table"
+					value = "#{cursoMB.cursoLazyDataModel}"
+					var="crs"
+					rows="15"
+					rowKey="#{crs.id}"
+					paginator="true"
+					lazy="true"
+					emptyMessage="Nenhum registro encontrado">
+					
+					<f:facet name="header">
+					
+						<h:outputText value="Cadastros" />
+						
+					</f:facet>
+					
+					<p:column headerText="Curso">
+					
+						<h:outputText value="#{crs.nome}" />
+						
+					</p:column>
+					
+					<p:column headerText="Duração(anos)">
+					
+						<h:outputText value="#{crs.duracao}" />
+						
+					</p:column>
+					
+					<p:column headerText="Coordenador">
+					
+						<h:outputText value="#{cursoMB.getCoordenador(crs)}" />
+					
+					</p:column>
+					
+					<p:column headerText="Ações">
+						
+						<p:panelGrid columns="2">
+							
+							<p:commandButton id="removerBtn"
+								value="Remover"
+								icon="remove16"
+								oncomplete="PF('confirmWidgetVar').show()"
+								update=":confirmDlg">
+								
+								<f:setPropertyActionListener value="#{crs}" 
+								
+									target="#{cursoMB.curso}" />	
+														
+							</p:commandButton>
+							
+							<p:commandButton id="editarBtn"
+								value="Editar"
+								icon="editar16"
+								oncomplete="PF('dadosWidgetVar').show()"
+								update=":dadosForm">
+								
+								<f:setPropertyActionListener value="#{crs}"
+								
+								 	target="#{cursoMB.curso}" />
+								 	
+							</p:commandButton>
+							
+						</p:panelGrid>
+						
+					</p:column>
+					
+				</p:dataTable>
+				
+			</h:form>
+			
+		</div>
+		
+		<p:dialog id="dadosDlg"
+			widgetVar="dadosWidgetVar"
+			header="Dados"
+			width="500"
+			height="150"
+			modal="true">
+			
+			<h:form id="dadosForm">
+			
+				<h:panelGrid columns="2">
+					
+					<h:outputLabel id="nomeLb"
+						value="Nome:"
+						for="nome"/>
+				
+					<p:inputText id="nome"
+						value="#{cursoMB.curso.nome}"/>
+					
+					<h:outputLabel id ="duracaoLb" 
+						value="Duração(anos):"
+						for="duracao"/>
+					
+					<p:inputText id="duracao" 
+						value="#{cursoMB.curso.duracao}" />	
+
+				</h:panelGrid>
+				
+				<div class="formularioAcoes">
+					
+					<p:commandButton id="salvarBtn"
+						value="Salvar"
+						icon="salvar16"
+						update=":tableForm :msg :dadosForm"
+						actionListener="#{cursoMB.salvar}"
+						oncomplete="if(!args.validationFailed) PF('dadosWidgetVar').hide()"/>
+					
+					<p:commandButton id="cancelarBtn"
+						value="Cancelar"
+						icon="cancelar16"
+						actionListener="#{cursoMB.cancelar}"
+						oncomplete="PF('dadosWidgetVar').hide()"
+						immediate="true"/>
+											
+				</div>
+				
+			</h:form>
+			
+		</p:dialog>
+		
+		<p:confirmDialog id="confirmDlg"
+			widgetVar="confirmWidgetVar"
+			header="Remover"
+			message="Remover: #{cursoMB.curso.nome} ?"
+			showEffect="fade"
+			hideEffect="explode">
+			
+			<p:commandButton value="Sim"
+				icon="ok16"
+				actionListener="#{cursoMB.remover}"
+				update=":tableForm"
+				oncomplete="PF('confirmWidgetVar').hide()"/>
+				
+			<p:commandButton value ="Não"
+				icon="cancelar16"
+				actionListener="#{cursoMB.cancelar}"
+				oncomplete="PF('confirmWidgetVar').hide()"/>
+			
+		</p:confirmDialog>
+		
+	</ui:define>
+	
+</ui:composition>

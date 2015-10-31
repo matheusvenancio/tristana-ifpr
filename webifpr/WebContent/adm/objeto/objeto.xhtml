@@ -1,0 +1,176 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/layout/template.xhtml">
+
+	<ui:define name="body">
+		
+		<p:growl id="msg" 
+			showDetail="true" 
+			showSummary="false" />
+	
+	<div class="gerenciar">	
+	
+		<p>GERENCIAR ACHADOS E PERDIDOS</p>
+		
+		<div id="novoBtn">
+			<h:form style="float:left;">
+				
+				<p:commandButton id="novoObjeto"
+					value="Novo"
+					icon="add16"
+					actionListener="#{objetoMB.criar}"
+					oncomplete="PF('objDialog').show()"
+					update=":objDlg"/>
+					
+			</h:form>
+		</div>
+		
+		<h:form id="tableForm">
+			
+			<p:dataTable id="objetosTable"
+				value="#{objetoMB.objetoLazyDataModel}"
+				var="obj"
+				rows="15"
+				rowKey="#{obj.id}"
+				paginator="true"
+				lazy="true"
+				filteredValue="#{objetoMB.objetoFiltered}"
+				emptyMessage="Nenhum registro encontrado">
+				
+				<f:facet name="header">
+					<h:outputText value="Objetos cadastrados" />
+				</f:facet>
+				
+				<p:column headerText="Descrição">
+					<h:outputText value="#{obj.descricao}" />
+				</p:column>
+				
+				<p:column headerText="Categoria"
+					filterBy="#{obj.categoria}"
+					filterMatchMode="equals">
+					
+					<h:outputText value="#{obj.categoria}" />
+				</p:column>
+				
+				<p:column headerText="Ações">
+					<p:panelGrid columns="2">
+						
+						<p:commandButton id="editarObj" 
+							value="Editar" 
+							icon="editar16"
+							update=":objeto_form" 
+							oncomplete="PF('objDialog').show()"
+							action="#{objetoMB.editar}">
+										 
+							<f:setPropertyActionListener value="#{obj}"
+								target="#{objetoMB.objeto}" />
+								
+						</p:commandButton>
+
+						<p:commandButton id="removerObj" 
+							value="Remover" 
+							icon="remove16"
+							oncomplete="PF('objConfirmDialog').show()" 
+							update=":confirm">
+							
+							<f:setPropertyActionListener 
+								value="#{obj}"
+								target="#{objetoMB.objeto}" />
+								
+						</p:commandButton>
+					</p:panelGrid>
+				</p:column>
+			</p:dataTable>
+		</h:form>
+	</div>
+		
+	<p:dialog id="objDlg" 
+		widgetVar="objDialog"
+		header="Dados do Objeto"
+		width="500"
+		height="150"
+		modal="true"
+		closable="false">
+			
+		<h:form id="objeto_form">	
+			<div id="objetoFormulario">
+			
+					
+				<h:panelGrid columns="2">
+					
+					<h:outputLabel 
+						id="descricaoLb"
+						value="Descrição:"
+						for="descricao" />
+						
+					<p:inputText 
+						id="descricao"
+						value="#{objetoMB.objeto.descricao}"
+						size="50"/>
+									
+					
+					<h:outputLabel id="CategoriaLb"
+						value="Categoria:" 
+						for="categoria"/>
+										   
+					<p:autoComplete id="categoria" 
+						completeMethod="#{categoriaDao.pesquisarPorNome}"
+						value="#{objetoMB.categoria}"
+						converter="#{categoriaConverter}"
+						required="true"
+						requiredMessage="Categoria Inválida"/>				
+						
+				 	</h:panelGrid>
+			 	</div>
+			 	
+				<div class="formularioAcoes">
+				   
+				   	<p:commandButton id="salvarBt"
+					 	value="Salvar"
+						icon="salvar16"
+						update=":tableForm :objeto_form :msg"
+						actionListener="#{objetoMB.salvar}"
+						disabled="if(#{objetoMB.objeto == null})"
+						oncomplete="if(!args.validationFailed) PF('objDialog').hide()"/>
+								 
+				  	<p:commandButton id="cancelarBt"
+						value="Cancelar"
+						icon="cancelar16"
+						oncomplete="PF('objDialog').hide()"
+						update=":msg"
+						immediate="true"
+						actionListener="#{objetoMB.cancelar}"/>
+						
+				</div>							
+			</h:form>
+		</p:dialog>
+		
+		<p:confirmDialog id="confirm" 
+				widgetVar="objConfirmDialog"
+			global="true"
+			header="Confirma exclusão da objeto?"
+			showEffect="fade"
+			message="Deseja realmente excluir este objeto?"
+			hideEffect="explode">
+			
+			<h:form>
+				
+				<p:commandButton value="Sim"
+					actionListener="#{objetoMB.remover}"
+					oncomplete="PF('objConfirmDialog').hide()"
+					update=":tableForm"
+		        	icon="ok16" />
+		        	
+		        <p:commandButton value="Não"
+		        	actionListener="#{objetoMB.cancelar}"
+		        	oncomplete="PF('objConfirmDialog').hide()"
+		        	icon="cancelar16" />
+		        	
+	        </h:form>
+	    </p:confirmDialog>
+	</ui:define>
+</ui:composition>

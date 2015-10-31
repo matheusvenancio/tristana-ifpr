@@ -1,0 +1,274 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" 
+	template="/layout/template.xhtml">
+
+	<ui:define name="body">
+
+		<p:growl id="msg" 
+			showDetail="true" 
+			showSummary="false"/>
+
+		<div class="gerenciar">
+
+			<p>GERENCIAR PROFESSORES</p>
+
+			<div id="adicionarBtn">
+				
+				<h:form style="float:left;">
+
+					<p:commandButton id="adicionarBtn"
+						value="Novo" 
+						icon="add16"
+						actionListener="#{professorMB.criar}"
+						oncomplete="PF('dadosWidgetVar').show()" update=":dadosDlg" />
+
+				</h:form>
+				
+			</div>
+
+			<h:form id="tableForm">
+
+				<p:dataTable id="table"
+					value="#{professorMB.professorLazyDataModel}" 
+					var="pf" 
+					rows="15"
+					rowKey="#{pf.id}" 
+					paginator="true" 
+					lazy="true"
+					filteredValue="#{professorMB.professoresFiltered}"
+					emptyMessage="Nenhum registro encontrado">
+
+					<f:facet name="header">
+					
+						<h:outputText value="Cadastros" />
+						
+					</f:facet>
+
+					<p:column headerText="Nome" 
+						filterBy="#{pf.nome}"
+						filterMatchMode="equals">
+
+						<h:outputText value="#{pf.nome}" />
+						
+					</p:column>
+
+					<p:column headerText="Siape"
+						filterBy="#{pf.siape}"
+						filterMatchMode="equals">
+
+						<h:outputText value="#{pf.siape}" />
+						
+					</p:column>
+					
+					<p:column headerText="Email" 
+						filterBy="#{pf.email}"
+						filterMatchMode="equals">
+
+						<h:outputText value="#{pf.email}" />
+						
+					</p:column>
+
+
+					<p:column headerText="Ações">
+					
+						<p:panelGrid columns="2">
+
+							<p:commandButton id="editarBtn" 
+								value="Editar" 
+								icon="editar16"
+								update=":dadosForm" 
+								oncomplete="PF('dadosWidgetVar').show()">
+
+								<f:setPropertyActionListener value="#{pf}"
+									target="#{professorMB.professor}" />
+
+							</p:commandButton>
+
+							<p:commandButton id="removerBtn" 
+								value="Remover" 
+								icon="remove16"
+								oncomplete="PF('confirmWidgetVar').show()" 
+								update=":confirmDlg">
+
+								<f:setPropertyActionListener value="#{pf}"
+									target="#{professorMB.professor}" />
+
+							</p:commandButton>
+							
+						</p:panelGrid>
+						
+					</p:column>
+					
+				</p:dataTable>
+				
+			</h:form>
+			
+		</div>
+
+		<p:dialog id="dadosDlg" 
+			widgetVar="dadosWidgetVar" 
+			header="Dados"
+			width="500"
+			height="300" 
+			modal="true" 
+			closable="false">
+
+			<h:form id="dadosForm">
+
+				<h:panelGrid columns="2">
+
+					<h:outputLabel id="nomeLb" 
+						value="Nome:" 
+						for="nome" />
+
+					<p:inputText id="nome" 
+						required="true"
+						requiredMessage="Nome é obrigatório" 
+						value="#{professorMB.professor.nome}" />
+				
+					<h:outputLabel id="siapeLb" 
+						value="Siape:" 
+						for="siape" />
+						
+					<p:inputText id="siape" 
+						required="true"
+						requiredMessage="Siape é obrigatório" 
+						value="#{professorMB.professor.siape}" />
+
+					<h:outputLabel id="emailLb" 
+						value="Email:" 
+						for="email" />
+						
+					<p:inputText id="email" 
+						required="true"
+						requiredMessage="Email é obrigatório" 
+						value="#{professorMB.professor.email}" />
+						
+							
+					<h:outputLabel id="telefoneLb" 
+						value="Telefone:" 
+						for="telefone" />
+						
+					<p:inputText id="telefone" 
+						required="true"
+						requiredMessage="Telefone é obrigatório" 
+						value="#{professorMB.professor.telefone}" />	
+					
+							
+					<h:outputLabel id="formacaoLb" 
+						value="Formação:" 
+						for="formacao" />
+						
+					<p:inputText id="formacao" 
+						required="true"
+						requiredMessage="Formação é obrigatório" 
+						value="#{professorMB.professor.formacao}" />
+				
+					 <p:outputLabel for="titulacao" 
+					 	value="Titulação:" />
+					 	
+			        <p:selectOneMenu id="titulacao" 
+			        	value="#{professorMB.professor.titulacao}" 
+			        	style="width:125px">
+			        	
+			            <f:selectItem itemLabel="Selecione" 
+			            	itemValue="" />
+			            	
+			            <f:selectItem itemLabel="Tecnólogo" 
+			            	itemValue="#{ TipoTitulacao.TECNOLOGO.toString }"/>
+			            
+			            <f:selectItem itemLabel="Bachalerado" 
+			            	itemValue="#{ TipoTitulacao.BACHALERADO}" />
+			            
+			            <f:selectItem itemLabel="Licenciatura" 
+			            	itemValue="#{ TipoTitulacao.LICENCIATURA }" />
+			            	
+			            <f:selectItem itemLabel="Especialização" 
+			            	itemValue="#{ TipoTitulacao.ESPECIALIZACAO }" />
+			            
+			            <f:selectItem itemLabel="Mestrado" 
+			            	itemValue="#{ TipoTitulacao.MESTRADO }" />
+			            
+			            <f:selectItem itemLabel="Doutorado" 
+			            	itemValue="#{ TipoTitulacao.DOUTORADO }" />
+
+			        </p:selectOneMenu>	
+			        
+			        <p:outputLabel for="regime" 
+					 	value="Regime:" />
+					 	
+			        <p:selectOneMenu id="regime" 
+			        	value="#{professorMB.professor.regime}" 
+			        	style="width:125px">
+			        	
+			            <f:selectItem itemLabel="Selecione" 
+			            	itemValue="" />
+			            	
+			            <f:selectItem itemLabel="Dedicação Exclusiva" 
+			            	itemValue="#{ TipoRegime.EXCLUSIVO }" />
+			            
+			            <f:selectItem itemLabel="20H" 
+			            	itemValue="#{ TipoRegime.VINTE_HORAS}" />
+			            
+			            <f:selectItem itemLabel="40H" 
+			            	itemValue="#{ TipoRegime.QUARENTA_HORAS }" />
+			            
+			        </p:selectOneMenu>	
+			        
+				</h:panelGrid>
+
+				<div class="formularioAcoes">
+
+					<p:commandButton id="salvarBtn" 
+						value="Salvar" 
+						icon="salvar16"
+						update=":tableForm :dadosForm :msg"
+						actionListener="#{professorMB.salvar}"
+						oncomplete="if(!args.validationFailed) PF('dadosWidgetVar').hide()" />
+
+					<p:commandButton id="cancelarBn" 
+						value="Cancelar" 
+						icon="cancelar16"
+						oncomplete="PF('dadosWidgetVar').hide()"
+						update=":msg" 
+						immediate="true"
+						actionListener="#{professorMB.cancelar}" />
+
+				</div>
+				
+			</h:form>
+			
+		</p:dialog>
+
+		<p:confirmDialog id="confirmDlg" 
+			widgetVar="confirmWidgetVar"
+			global="true" 
+			header="Remover" 
+			showEffect="fade"
+			message="Remover: #{professorMB.professor.nome} ?"
+			hideEffect="explode">
+
+			<h:form>
+			
+				<p:commandButton value="Sim" 
+					actionListener="#{professorMB.remover}"
+					oncomplete="PF('confirmWidgetVar').hide()" 
+					update=":tableForm"
+					icon="ok16" />
+
+				<p:commandButton value="Não"
+					actionListener="#{professorMB.cancelar}"
+					oncomplete="PF('confirmWidgetVar').hide()" 
+					icon="cancelar16" />
+
+			</h:form>
+			
+		</p:confirmDialog>
+		
+	</ui:define>
+	
+</ui:composition>

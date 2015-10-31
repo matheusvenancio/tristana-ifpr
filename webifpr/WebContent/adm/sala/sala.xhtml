@@ -1,0 +1,229 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/layout/template.xhtml">
+
+	<ui:define name="body">
+	
+		<p:growl id="msg" 
+			showDetail="true"
+			showSummary="false"/>
+		
+		
+	<div class="gerenciar">	
+
+		<p>GERENCIAR SALAS</p>
+	
+		<div id="adicionarBtn">
+		
+			<h:form style="float:left;">
+			
+				<p:commandButton id="adicionarBtn"
+					value="Adicionar"
+					icon="add16"
+					actionListener="#{salaMB.criar}"
+					oncomplete="PF('dadosWidgetVar').show()"
+					update=":dadosDlg"/>
+					
+			</h:form>
+		</div>
+	
+		<h:form id="tableForm">
+
+			<p:dataTable id="table"
+				value="#{salaMB.salaLazyDataModel}"
+				var="sl"
+				rows="15"
+				rowKey="#{sl.id}"
+				paginator="true"
+				lazy="true"
+				filteredValue="#{salaMB.salasFiltered}"
+				emptyMessage="Nenhum registro encontrado">
+				
+				<f:facet name="header">
+				
+					<h:outputText value="Salas cadastradas" />
+					
+				</f:facet>
+				
+				<p:column headerText="Nome"
+					filterBy="#{sl.nome}"
+					filterMatchMode="equals">
+					
+					<h:outputText value="#{sl.nome}" />
+					
+				</p:column>
+				
+				<p:column headerText="Capacidade"
+					filterBy="#{sl.capacidade}"
+					filterMatchMode="equals">
+					
+					<h:outputText value="#{sl.capacidade}" />
+					
+				</p:column>
+				
+				<p:column headerText="Área">
+				
+					<h:outputText value="#{sl.area}" />
+					
+				</p:column>
+				
+				<p:column headerText="Ações">
+				
+					<p:panelGrid columns="2">
+						
+						<p:commandButton id="editarBtn" 
+							value="Editar" 
+							icon="editar16"
+							update=":dadosForm" 
+							oncomplete="PF('dadosWidgetVar').show()">
+										 
+							<f:setPropertyActionListener 
+								value="#{sl}"
+								target="#{salaMB.sala}" />
+								
+						</p:commandButton>
+
+						<p:commandButton id="removerBtn" 
+							value="Remover" 
+							icon="remove16"
+							oncomplete="PF('confirmWidgetVar').show()" 
+							update=":confirmDlg">
+							
+							<f:setPropertyActionListener value="#{sl}"
+								target="#{salaMB.sala}" />
+								
+						</p:commandButton>
+						
+					</p:panelGrid>			
+					
+				</p:column>
+				
+			</p:dataTable>
+			
+		</h:form>
+		
+	</div>
+		
+	<p:dialog id="dadosDlg" 
+		widgetVar="dadosWidgetVar"
+		header="Dados"
+		width="500"
+		height="150"
+		modal="true"
+		closable="false">
+				
+		<h:form id="dadosForm">
+				
+			<h:inputHidden value="true">
+			
+				<f:attribute name="nomeVlt" value="#{nomeVlt}" />
+				
+			</h:inputHidden>
+				
+			<h:panelGrid columns="2">
+				
+				<h:outputLabel id="nomeLb"
+					value="Nome:"
+					for="nome" />
+							
+				<p:inputText id="nome"
+					required="true"
+					requiredMessage="Nome é obrigatório"
+					binding="#{nomeVlt}"
+					value="#{salaMB.sala.nome}"
+					disabled="#{salaMB.sala.id != null}">
+					
+					
+					<p:ajax listener="#{salaMB.validarNome}"
+						update=":msg" 
+						event="blur"/>
+						
+				</p:inputText>
+											
+				<h:outputLabel id="capacidadeLb"
+					value="Capacidade:"
+					for="capacidade" />
+						
+				<p:inputText id="capacidade"
+					required="true"
+					requiredMessage="Capacidade é obrigatório"
+					value="#{salaMB.sala.capacidade}"
+					converterMessage="Capacidade é inválido">
+					
+					<f:validateLongRange minimum="1" 
+						maximum="1000"/>
+						
+				</p:inputText>
+									 
+				<h:outputLabel id="areaLb"
+					value="Área (m²):"
+					for="area" />
+						
+				<p:inputText id="area"
+					required="true"
+					requiredMessage="Área é obrigtório"
+					value="#{salaMB.sala.area}"
+					converterMessage="Área é inválido">
+					
+					<f:validateLongRange minimum="1" 
+						maximum="1000"/>
+				
+				</p:inputText>
+							
+			</h:panelGrid>
+			
+			<div class="formularioAcoes">	
+				
+				<p:commandButton id="salvarBtn"
+					value="Salvar"
+					icon="salvar16"
+					update=":tableForm :dadosForm :msg"
+					actionListener="#{salaMB.salvar}"
+					oncomplete="if(!args.validationFailed) PF('dadosWidgetVar').hide()"/>
+								 
+				<p:commandButton id="cancelarBtn"
+					value="Cancelar"
+					icon="cancelar16"
+					oncomplete="PF('dadosWidgetVar').hide()"
+					update=":msg"
+					immediate="true"
+					actionListener="#{salaMB.cancelar}"/>
+					
+			</div>			
+										
+		</h:form>
+		
+	</p:dialog>
+		
+	<p:confirmDialog id="confirmDlg" 
+		widgetVar="confirmWidgetVar"
+		global="true"
+		header="Remover?"
+		showEffect="fade"
+		message="Remover: #{salaMB.sala.nome} ?"
+		hideEffect="explode">
+			
+			<h:form>
+			
+				<p:commandButton value="Sim"
+					actionListener="#{salaMB.remover}"
+					oncomplete="PF('confirmWidgetVar').hide()"
+					update=":tableForm"
+			        icon="ok16" />
+			        	
+			     <p:commandButton value="Não"
+			     	actionListener="#{salaMB.cancelar}"
+			        oncomplete="PF('confirmWidgetVar').hide()"
+			        icon="cancelar16" />
+		        
+	    	 </h:form>    
+	    	 
+		 </p:confirmDialog>
+		 
+	</ui:define>
+	
+</ui:composition>

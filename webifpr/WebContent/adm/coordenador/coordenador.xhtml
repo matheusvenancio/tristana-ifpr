@@ -1,0 +1,184 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/layout/template.xhtml">
+
+	<ui:define name="body">
+	
+		<p:growl id="msg" 
+			showDetail="true" 
+			showSummary="false"/>
+
+		<div class="gerenciar">
+
+			<p>GERENCIAR COORDENADOR</p>
+			
+			<div id="adicionarBtn">
+				
+				<h:form style="float:left;">
+					
+					<p:commandButton id="adicionarBtn"
+						value="Adicionar"
+						icon="add16"
+						actionListener="#{coordenadorMB.criar}"
+						oncomplete="PF('dadosWidgetVar').show()"
+						update=":dadosDlg"/>
+						
+				</h:form>
+								
+			</div>
+		
+			<h:form id="tableForm">
+				
+				<p:dataTable id="table"
+					value="#{coordenadorMB.coordenadorLazyDataModel}"
+					rows="15"
+					rowKey="#{coordenadorMB.coordenador.id}"
+					var="cdr"
+					paginator="true"
+					lazy="true"
+					emptyMessage="Nenhum registro encontrado"
+					filteredValue="#{coordenadorMB.coordenadorFiltered}">
+					
+					<f:facet name="header">
+					
+						<h:outputText value="Cadastros" />
+						
+					</f:facet>
+					
+					<p:column headerText="Nome">
+					
+						<h:outputText value="#{cdr.nome}" />
+						
+					</p:column>	
+					
+					<p:column headerText="Curso">
+					
+						<h:outputText value="#{cursoDao.pesquisarPorCoordenador(cdr.id).nome}" />
+						
+					</p:column>
+					
+					<div class="formularioAcoes">
+					
+						<p:column headerText="Ações">
+							
+							<p:panelGrid columns="2">
+								
+								<p:commandButton id="editarBtn"
+									value="Editar"
+									icon="editar16"
+									oncomplete="PF('dadosWidgetVar').show()"
+									update=":dadosForm">
+									
+									<f:setPropertyActionListener value="#{cdr}" 
+										target="#{coordenadorMB.coordenador}" />	
+										
+								</p:commandButton>
+								
+								<p:commandButton id ="removerBtn"
+									icon="remove16"
+									value="Remover"
+									oncomplete="PF('confirmWidgetVar').show()"
+									update=":confirmDlg">
+								
+									<f:setPropertyActionListener value="#{cdr}"
+										target="#{coordenadorMB.coordenador}" />
+										
+								</p:commandButton>
+								
+							</p:panelGrid>
+							
+						</p:column>
+					
+					</div>
+				
+				</p:dataTable>
+				
+			</h:form>
+			
+		</div>
+		
+		<p:dialog id="dadosDlg"
+			widgetVar="dadosWidgetVar"
+			header="Dados"
+			height="150"
+			width="400"
+			modal="true"
+			closable="false">
+			
+			<h:form id="dadosForm">
+			
+				<h:panelGrid columns="2">
+				
+					<h:outputLabel id="professorLb"
+					 value="Professor: "
+					 for="professor"/>
+					 
+					<p:autoComplete id="professor"
+						value="#{coordenadorMB.professor}"
+						converter="#{professorConverter}"
+						completeMethod="#{professorDao.pesquisarPorNome}"
+						required="true"
+						requiredMessage="Professor é obrigatório"/>
+						
+					<h:outputLabel id="cursoLb"
+						value="Curso:"
+						for="curso" />
+						
+					<p:autoComplete id="curso"
+						completeMethod="#{cursoDao.pesquisarPorNome}"
+						value="#{coordenadorMB.coordenador.curso}"
+						converter="#{cursoConverter}"
+						required="true"
+						requiredMessage="Curso é obrigatório"/>
+			
+			</h:panelGrid>
+			
+				<div class="formularioAcoes">
+					
+					<p:commandButton id="salvarBtn"
+						value="Salvar"
+						icon="salvar16"
+						actionListener="#{coordenadorMB.salvar}"
+						update=":tableForm :dadosForm :msg"
+						oncomplete="if(!args.validationFailed) PF('dadosWidgetVar').hide()"/>
+						
+					<p:commandButton id="cancelarBtn"
+						value="Cancelar"
+						icon="cancelar16"
+						actionListener="#{coordenadorMB.cancelar}"
+						oncomplete="PF('dadosWidgetVar').hide()"
+						immediate="true"/>
+				
+				</div>
+			
+			</h:form>
+		
+		</p:dialog>
+		
+		<p:confirmDialog id="confirmDlg"
+			widgetVar="confirmWidgetVar"
+			message="Remover: #{coordenadorMB.coordenador.nome} ?"
+			header="Remover"
+			showEffect="fade"
+			hideEffect="explode">
+			
+			<p:commandButton value="Sim"
+			 	actionListener="#{coordenadorMB.remover}"
+			 	update=":dadosForm"
+			 	icon="ok16"
+			 	oncomplete="PF('confirmWidgetVar').hide()"/>
+			 	
+			 <p:commandButton value="Não"
+			 	icon="cancelar16"
+			 	actionListener="#{coordenadorMB.cancelar}"
+			 	oncomplete="PF('confirmWidgetVar').hide()"/>
+		
+		</p:confirmDialog>
+		
+	</ui:define>
+	
+</ui:composition>

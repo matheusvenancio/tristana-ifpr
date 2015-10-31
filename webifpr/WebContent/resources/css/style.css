@@ -1,0 +1,398 @@
+*{
+	margin: auto;
+	padding: 0;
+	border: 0;
+}
+
+body {
+	margin: 0px 0;
+	text-align: justify;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	background-color: #EEEEEE;
+}
+
+div#template {
+
+  	width: 1000px;
+    background-color: #EEEEEE;
+}
+
+div#templateLogin {
+
+  	width: 1000px;
+    background-color: #EEEEEE;
+    text-align: center;
+    margin-top: 100px;
+}
+
+div#templateLogin .ui-panelgrid td {
+	background-color: #EEEEEE !important;
+}
+
+div#templateLogin input{
+	background-color: #EEEEEE !important;
+	border:1px solid #D2D2D4;
+	border-radius: 10px;
+	height: 40px;
+	color: #FFFFFF;
+		
+	padding-left:2px;
+	font-size: 15px;
+	color: #999999;
+}
+
+div#logo {
+	float: left;
+	margin: 5px;
+	
+}
+
+div#logoLogin {
+	
+	margin: 0 auto;
+	padding-bottom: 20px;
+}
+
+div#login{
+	background-color: #EEEEEE !important;
+}
+
+div#acoesHeader{
+	float: right;
+	margin-top: 20px;
+	margin-right: 10px;
+}
+
+div#divisorHeader {
+	
+	background: #256179;
+	wight: 100%;
+	height: 10px;
+	clear: both;
+}
+
+div#menu{
+
+	clear: both;
+}
+
+div#menu .ui-menubar{
+	background-color: #DDDDDD !important;
+	width: 993px;
+	border-style: none !important;
+	display: inline-block;
+}
+
+div#menu .ui-menubar .ui-menuitem-text {
+	
+	padding-left: 5px;	
+
+}
+
+div#bodyTemplate{
+	clear: both;
+}
+
+div#acoesHeader a:link, div#acoesHeader a:visited,div#acoesHeader a:active {
+
+    color: #256179;
+    text-decoration: none;
+    font-style: bold;
+    font-family: Impact, fantasy;
+	font-size: 12px;
+  
+}
+
+div#acoesHeader a:hover {
+    text-decoration: none;
+}
+
+div.gerenciar p {
+	
+	font-family: Impact, fantasy;
+	font-size: 20px;
+	margin-top: 100px;
+	margin-bottom:50px;
+	
+	color: #3B3B3B;
+}
+
+div.gerenciar .ui-datatable{
+	text-align: center;
+}
+
+div.gerenciar .ui-datatable .ui-button {
+	background: none !important;
+	border: none !important;
+}
+
+div#adicionarBtn .ui-button{
+	background: none !important;
+	border: none !important;
+	margin: 2px;
+	
+}
+
+div#filtroSala {
+	margin-bottom: 20px;
+}
+
+div#filtroSala  input{
+	
+	width: 120px !important;
+	background: #FFFFFF;
+	
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+div#turmaFormulario {
+	
+	text-align:center;
+	margin-bottom: 20px;
+
+}
+
+div.formularioAcoes{
+	
+	clear:both;
+	text-align:center;
+	margin-top: 20px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.titulo1 {
+	font-size: 14px;
+	font-weight: bold;
+}
+
+.label {
+	font-weight: bold;
+}
+
+.centro {
+    text-align: center;
+}
+
+.esquerda {
+    text-align: left;
+}
+
+.direita {
+    text-align: right;
+}
+
+.fonte {
+	font-size: 15px;
+}
+
+.ui-layout-north {
+	z-index: 20 !important;
+	overflow: visible !important;
+}
+
+.ui-layout-north .ui-layout-unit-content {
+	overflow: visible !important;
+}
+
+a img {
+	border: none;
+	vertical-align: middle;
+}
+
+#footer {
+	clear: both;
+	width: 1000px;
+	height: 12px;
+	margin: 0 auto;
+	position : relative;
+    bottom : 0;
+	background: url() repeat-x left top;
+	background: #DBFDB0;
+}
+
+#footer p {
+	width: 100%;
+	margin: 0;
+	padding: 15px 10px;
+	font-size: 11px;
+	text-align: center;
+}
+
+#footer .legal {
+	float: left;
+	height: 12px;
+	font: 8pt Arial;
+	text-align: center;
+}
+
+.tamanhoCaixaOpcoes{
+	width: 200px;
+	height: 23px;
+}
+
+.metade {
+     width: 50%;
+}
+
+.umterco {
+     width: 33%;
+}
+
+.noventa {
+     width: 90%;
+}
+
+.noventaecinco {
+     width: 95%;
+}
+
+.cinco {
+     width: 5%;
+}
+
+.dez {
+     width: 10%;
+}
+
+.ui-panelgrid td, .ui-panelgrid tr
+{
+    border-style: none !important
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.add16 {
+	background-image: url('../../img/16/add_16.png') !important
+}
+
+.administrar16 {
+	background-image: url('../../img/16/administrar_16.png') !important
+}
+
+.olhar16 {
+	background-image: url('../../img/16/olhar_16.png') !important
+}
+
+.ok16 {
+	background-image: url('../../img/16/ok_16.png') !important
+}
+
+.salvar16 {
+	background-image: url('../../img/16/ok_16.png') !important
+}
+
+.fechar16 {
+	background-image: url('../../img/16/cancel_16.png') !important
+}
+
+.cancelar16 {
+	background-image: url('../../img/16/cancel_16.png') !important
+}
+
+.colaboradores16 {
+	background-image: url('../../img/16/colaboradores_16.png') !important
+}
+
+.cursos16 {
+	background-image: url('../../img/16/cursos_16.png') !important
+}
+
+.editar16 {
+	background-image: url('../../img/16/editar_16.png') !important
+}
+
+.error16 {
+	background-image: url('../../img/16/error_16.png') !important
+}
+
+.formaturas16 {
+	background-image: url('../../img/16/formaturas_16.png') !important
+}
+
+.horarios16 {
+	background-image: url('../../img/16/horarios_16.png') !important
+}
+
+.materias16 {
+	background-image: url('../../img/16/materias_16.png') !important
+}
+
+.objetosperdidos16 {
+	background-image: url('../../img/16/objetos_perdidos_16.png') !important
+}
+
+.professores16 {
+	background-image: url('../../img/16/professores_16.png') !important
+}
+
+.remove16 {
+	background-image: url('../../img/16/remover_16.png') !important
+}
+
+.salas16 {
+	background-image: url('../../img/16/salas_16.png') !important
+}
+
+.turmas16 {
+	background-image: url('../../img/16/turmas_16.png') !important
+}
