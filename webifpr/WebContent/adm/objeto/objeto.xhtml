@@ -17,21 +17,31 @@
 		<p>GERENCIAR ACHADOS E PERDIDOS</p>
 		
 		<div id="novoBtn">
-			<h:form style="float:left;">
+			<h:form style="float:left">
 				
-				<p:commandButton id="novoObjeto"
-					value="Novo"
+				<p:commandButton id="adicionarObjetoBtn"
+					value="Adicionar Objeto"
 					icon="add16"
 					actionListener="#{objetoMB.criar}"
-					oncomplete="PF('objDialog').show()"
-					update=":objDlg"/>
+					oncomplete="PF('dadosWidgetVar').show()"
+					update=":dadosDlg"/>
+					
+			</h:form>
+			<h:form style="float:right;">
+				
+				<p:commandButton id="adicionarCategoriaBtn"
+					value="Adicionar Categoria"
+					icon="add16"
+					actionListener="#{categoriaMB.criar}"
+					oncomplete="PF('categoriaWidgetVar').show()"
+					update=":categoriaDlg"/>
 					
 			</h:form>
 		</div>
 		
 		<h:form id="tableForm">
 			
-			<p:dataTable id="objetosTable"
+			<p:dataTable id="table"
 				value="#{objetoMB.objetoLazyDataModel}"
 				var="obj"
 				rows="15"
@@ -56,26 +66,63 @@
 					<h:outputText value="#{obj.categoria}" />
 				</p:column>
 				
-				<p:column headerText="Ações">
-					<p:panelGrid columns="2">
+				<p:column width="200" filterBy="#{obj.status}" headerText="Status" filterMatchMode="equals">
+	            <f:facet name="filter">
+	                <p:selectOneButton onchange="PF('tableForm').filter()">
+	                    <f:converter converterId="javax.faces.Boolean" />
+	                    <f:selectItem itemLabel="All" itemValue="" />
+	                    <f:selectItem itemLabel="Achado" itemValue="true" />
+	                    <f:selectItem itemLabel="Perdido" itemValue="false" />
+	                </p:selectOneButton>
+	            </f:facet>
+	            <h:outputText value="#{obj.status ? 'Achado': 'Perdido'}" />
+	        	</p:column>
+				
+				<p:column headerText="Ações" width="400">
+					<p:panelGrid columns="4">
+					
+						<p:commandButton id="finalizarBtn" 
+							value="Finalizar" 
+							icon="finalizar16"
+							update=":finalizarForm" 
+							oncomplete="PF('finalizarWidgetVar').show()">
+										 
+							<f:setPropertyActionListener 
+								value="#{obj}"
+								target="#{objetoMB.objeto}" />
+								
+						</p:commandButton>
 						
-						<p:commandButton id="editarObj" 
+						<p:commandButton id="visualizarBtn" 
+								value="Visualizar" 
+								icon="olhar16"
+								update=":visualizarForm" 
+								oncomplete="PF('visualizarWidgetVar').show()">
+
+								<f:setPropertyActionListener 
+									value="#{obj}"
+									target="#{objetoMB.objeto}" />
+
+							</p:commandButton>
+						
+						<p:commandButton id="editarBtn" 
 							value="Editar" 
 							icon="editar16"
-							update=":objeto_form" 
-							oncomplete="PF('objDialog').show()"
+							update=":dadosForm" 
+							oncomplete="PF('dadosWidgetVar').show()"
 							action="#{objetoMB.editar}">
 										 
-							<f:setPropertyActionListener value="#{obj}"
+							<f:setPropertyActionListener 
+								value="#{obj}"
 								target="#{objetoMB.objeto}" />
 								
 						</p:commandButton>
 
-						<p:commandButton id="removerObj" 
+						<p:commandButton id="removerBtn" 
 							value="Remover" 
 							icon="remove16"
-							oncomplete="PF('objConfirmDialog').show()" 
-							update=":confirm">
+							oncomplete="PF('confirmWidgetVar').show()" 
+							update=":confirmDlg">
 							
 							<f:setPropertyActionListener 
 								value="#{obj}"
@@ -88,19 +135,41 @@
 		</h:form>
 	</div>
 		
-	<p:dialog id="objDlg" 
-		widgetVar="objDialog"
+	<p:dialog id="dadosDlg" 
+		widgetVar="dadosWidgetVar"
 		header="Dados do Objeto"
-		width="500"
-		height="150"
+		width="300"
+		height="160"
 		modal="true"
 		closable="false">
 			
-		<h:form id="objeto_form">	
+		<h:form id="dadosForm">	
 			<div id="objetoFormulario">
 			
 					
 				<h:panelGrid columns="2">
+					
+					<h:outputLabel 
+						id="entregadorLb"
+						value="Nome entregador:"
+						for="entregador" />
+						
+					<p:inputText 
+						id="entregador"
+						required="true"
+						requiredMessage="Nome do entregador é obrigatório!"
+						value="#{objetoMB.objeto.nomeEntregador}"/>
+						
+					<h:outputLabel 
+						id="localLb"
+						value="Local:"
+						for="local" />
+						
+					<p:inputText 
+						id="local"
+						required="true"
+						requiredMessage="Local é obrigatório!"
+						value="#{objetoMB.objeto.localEncontrado}"/>
 					
 					<h:outputLabel 
 						id="descricaoLb"
@@ -109,10 +178,10 @@
 						
 					<p:inputText 
 						id="descricao"
-						value="#{objetoMB.objeto.descricao}"
-						size="50"/>
+						required="true"
+						requiredMessage="Nome obrigatório!"
+						value="#{objetoMB.objeto.descricao}"/>
 									
-					
 					<h:outputLabel id="CategoriaLb"
 						value="Categoria:" 
 						for="categoria"/>
@@ -129,18 +198,18 @@
 			 	
 				<div class="formularioAcoes">
 				   
-				   	<p:commandButton id="salvarBt"
+				   	<p:commandButton id="salvarBtn"
 					 	value="Salvar"
 						icon="salvar16"
-						update=":tableForm :objeto_form :msg"
+						update=":tableForm :dadosForm :msg"
 						actionListener="#{objetoMB.salvar}"
 						disabled="if(#{objetoMB.objeto == null})"
-						oncomplete="if(!args.validationFailed) PF('objDialog').hide()"/>
+						oncomplete="if(!args.validationFailed) PF('dadosWidgetVar').hide()"/>
 								 
 				  	<p:commandButton id="cancelarBt"
 						value="Cancelar"
 						icon="cancelar16"
-						oncomplete="PF('objDialog').hide()"
+						oncomplete="PF('dadosWidgetVar').hide()"
 						update=":msg"
 						immediate="true"
 						actionListener="#{objetoMB.cancelar}"/>
@@ -149,10 +218,208 @@
 			</h:form>
 		</p:dialog>
 		
-		<p:confirmDialog id="confirm" 
-				widgetVar="objConfirmDialog"
+		<p:dialog id="visualizarDlg" 
+		widgetVar="visualizarWidgetVar"
+		header="Dados do Objeto"
+		width="300"
+		height="200"
+		modal="true">
+			
+		<h:form id="visualizarForm">	
+			
+			<div id="visualizarFormulario">
+			
+					<h:panelGrid columns="2">
+					
+					<h:outputLabel 
+						id="entregadorLb"
+						value="Nome entregador:"
+						for="entregador" />
+						
+					<p:inputText 
+						id="entregador"
+						readonly="true"
+						value="#{objetoMB.objeto.nomeEntregador}"/>
+						
+					<h:outputLabel 
+						id="localLb"
+						value="Local:"
+						for="local" />
+						
+					<p:inputText 
+						id="local"
+						readonly="true"
+						value="#{objetoMB.objeto.localEncontrado}"/>
+						
+					<h:outputLabel 
+						id="dataLb"
+						value="Data:"
+						for="data" />
+						
+					<p:inputText 
+						id="data"
+						readonly="true"
+						value="#{objetoMB.objeto.dataEncontrado}"/>	
+					
+					<h:outputLabel 
+						id="descricaoLb"
+						value="Descrição:"
+						for="descricao" />
+						
+					<p:inputText 
+						id="descricao"
+						readonly="true"
+						value="#{objetoMB.objeto.descricao}"/>
+									
+					<h:outputLabel id="CategoriaLb"
+						value="Categoria:" 
+						for="categoria"/>
+										   
+					<p:autoComplete id="categoria" 
+						value="#{objetoMB.objeto.categoria}"
+						readonly="true"/>	
+						
+					<h:outputLabel id="nomeReceptorLb"
+						value="Receptor:" 
+						for="receptor"/>
+										   
+					<p:autoComplete id="receptor" 
+						value="#{objetoMB.objeto.nomeReceptor}"
+						readonly="true"/>
+						
+					<h:outputLabel id="rgReceptorLb"
+						value="RG Receptor:" 
+						for="rgReceptor"/>
+										   
+					<p:autoComplete id="rgReceptor" 
+						value="#{objetoMB.objeto.rgReceptor}"
+						readonly="true"/>			
+						
+				 	</h:panelGrid>
+				 	
+			</div>
+							
+		</h:form>
+		
+		</p:dialog>
+		
+		<p:dialog id="finalizarDlg" 
+		widgetVar="finalizarWidgetVar"
+		header="Finalizar Objeto"
+		width="500"
+		height="150"
+		modal="true">
+			
+		<h:form id="finalizarForm">	
+			
+			<div id="finalizarFormulario">
+			
+					<h:panelGrid columns="2">
+					
+					<h:outputLabel 
+						id="receptorLb"
+						value="Nome receptor:"
+						for="receptor" />
+						
+					<p:inputText 
+						id="receptor"
+						required="true"
+						requiredMessage="Nome do receptor é obrigatório!"
+						value="#{objetoMB.objeto.nomeReceptor}"/>
+						
+					<h:outputLabel 
+						id="rgReceptorLb"
+						value="RG Receptor:"
+						for="rgReceptor" />
+						
+					<p:inputText 
+						id="rgReceptor"
+						required="true"
+						requiredMessage="RG é obrigatório!"
+						value="#{objetoMB.objeto.rgReceptor}"/>				
+						
+				 	</h:panelGrid>
+				 	
+			</div>
+			
+			<div class="formularioAcoes">
+				   
+				   	<p:commandButton id="finalizarBtn"
+					 	value="Finalizar"
+						icon="salvar16"
+						update=":tableForm :finalizarForm :msg"
+						actionListener="#{objetoMB.salvar}"
+						action="#{objetoMB.finalizar}"
+						disabled="if(#{objetoMB.objeto == null})"
+						oncomplete="if(!args.validationFailed) PF('finalizarWidgetVar').hide()}"/>
+								 
+				  	<p:commandButton id="cancelarBt"
+						value="Cancelar"
+						icon="cancelar16"
+						oncomplete="PF('finalizarWidgetVar').hide()"
+						update=":msg"
+						immediate="true"
+						actionListener="#{objetoMB.cancelar}"/>
+						
+			</div>
+							
+		</h:form>
+		
+		</p:dialog>
+		
+		<p:dialog id="categoriaDlg" 
+		widgetVar="categoriaWidgetVar"
+		header="Dados da Categoria"
+		width="200"
+		height="90"
+		modal="true"
+		closable="false">
+			
+		<h:form id="categoriaForm">	
+			<div id="categoriaFormulario">
+			
+					
+				<h:panelGrid columns="2">
+					
+					<h:outputLabel 
+						id="nomeCategoriaLb"
+						value="Nome:"
+						for="nome" />
+						
+					<p:inputText 
+						id="nomeCategoria"
+						required="true"
+						requiredMessage="Nome obrigatório!"
+						value="#{categoriaMB.categoria.nome}"/>
+									
+				 </h:panelGrid>
+			 	</div>
+			 	
+				<div class="formularioAcoes">
+				   
+				   	<p:commandButton id="salvarBtn"
+					 	value="Salvar"
+						icon="salvar16"
+						update=":categoriaForm :msg"
+						actionListener="#{categoriaMB.salvar}"
+						oncomplete="if(!args.validationFailed) PF('categoriaWidgetVar').hide()"/>
+								 
+				  	<p:commandButton id="cancelarBt"
+						value="Cancelar"
+						icon="cancelar16"
+						oncomplete="PF('categoriaWidgetVar').hide()"
+						update=":msg"
+						immediate="true"
+						actionListener="#{categoriaMB.cancelar}"/>
+						
+				</div>							
+			</h:form>
+		</p:dialog>
+		
+		<p:confirmDialog id="confirmDlg" 
+			widgetVar="confirmWidgetVar"
 			global="true"
-			header="Confirma exclusão da objeto?"
+			header="Remover?"
 			showEffect="fade"
 			message="Deseja realmente excluir este objeto?"
 			hideEffect="explode">
@@ -161,13 +428,13 @@
 				
 				<p:commandButton value="Sim"
 					actionListener="#{objetoMB.remover}"
-					oncomplete="PF('objConfirmDialog').hide()"
+					oncomplete="PF('confirmWidgetVar').hide()"
 					update=":tableForm"
 		        	icon="ok16" />
 		        	
 		        <p:commandButton value="Não"
 		        	actionListener="#{objetoMB.cancelar}"
-		        	oncomplete="PF('objConfirmDialog').hide()"
+		        	oncomplete="PF('confirmWidgetVar').hide()"
 		        	icon="cancelar16" />
 		        	
 	        </h:form>
